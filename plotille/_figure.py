@@ -83,6 +83,7 @@ class Figure(object):
         # min, max -> value
         self.y_ticks_fkt = None
         self.x_ticks_fkt = None
+        self.show_axis = True
         self._plots = []
         self._texts = []
         self._spans = []
@@ -249,6 +250,10 @@ class Figure(object):
             y_delta = delta / self.height
 
         res = []
+        if not self.show_axis:
+            res = [""] * (self.height+1)
+            return res
+
         for i in range(self.height):
             value = i * y_delta + ymin
             if self.y_ticks_fkt:
@@ -269,6 +274,10 @@ class Figure(object):
         return list(reversed(res))
 
     def _x_axis(self, xmin, xmax, label='X', with_y_axis=False):
+        if not self.show_axis:
+            res = [""] * (self.width // 10 + 1)
+            return res
+
         delta = abs(xmax - xmin)
         if isinstance(delta, timedelta):
             x_delta = mk_timedelta(delta.total_seconds() / self.width)
